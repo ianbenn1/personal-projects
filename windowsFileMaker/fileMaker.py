@@ -1,0 +1,6 @@
+print("Filecreator V0.1.1 Alpha Access. ©2018 Ian Bennett\n**************************************************")
+newPath = input("Enter the name of the file you would like to create: ")
+print ("Creating file" + newPath + "...")
+newFile = open(newPath,'w')
+newFile.close()
+print("File created")
