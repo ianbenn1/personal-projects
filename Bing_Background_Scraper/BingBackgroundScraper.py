@@ -4,6 +4,7 @@ import re
 import urllib.request
 import shutil
 import datetime
+import os
 
 # Collect and parse first page
 page = requests.get('https://www.bing.com/HPImageArchive.aspx?format=xml&idx=0&n=1&mkt=en-CA')
@@ -53,3 +54,4 @@ print(now)
 with urllib.request.urlopen(url) as response, open("bingBackground" + str(now) + ".jpg", 'wb') as out_file:
     shutil.copyfileobj(response, out_file)
 print("Picture saved!")
+os.remove("bingXML.txt")
