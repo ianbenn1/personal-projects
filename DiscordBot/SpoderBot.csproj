@@ -120,6 +120,7 @@
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Interactive.Async, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Interactive.Async.3.1.1\lib\net45\System.Interactive.Async.dll</HintPath>
       <Private>True</Private>
@@ -145,6 +146,11 @@
     <Compile Include="MyBot.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -152,6 +158,24 @@
     <None Include="SpoderBot_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Spiders\drpupper.jpg" />
+    <Content Include="Spiders\ducks.jpeg" />
+    <Content Include="Spiders\footsnek.jpg" />
+    <Content Include="Spiders\forgotdog.jpg" />
+    <Content Include="Spiders\ventsnek.jpg" />
+    <None Include="Resources\drpupper.jpg" />
+    <None Include="Resources\ducks.jpeg" />
+    <None Include="Resources\footsnek.jpg" />
+    <None Include="Resources\forgotdog.jpg" />
+    <None Include="Resources\ineedthis.jpg" />
+    <None Include="Resources\longboy.jpg" />
+    <None Include="Resources\monkey1.jpg" />
+    <None Include="Resources\newsone.jpg" />
+    <None Include="Resources\sealdog.jpg" />
+    <None Include="Resources\snek2.jpg" />
+    <None Include="Resources\snekmic.jpg" />
+    <None Include="Resources\ventsnek.jpg" />
+    <None Include="Resources\snek1.jpg" />
     <Content Include="Spiders\centi1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -170,12 +194,16 @@
     <Content Include="Spiders\gbush.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Spiders\ineedthis.jpg" />
+    <Content Include="Spiders\longboy.jpg" />
+    <Content Include="Spiders\monkey1.jpg" />
+    <Content Include="Spiders\newsone.jpg" />
     <Content Include="Spiders\sadsnek.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Spiders\snek1.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Spiders\sealdog.jpg" />
+    <Content Include="Spiders\snek2.jpg" />
+    <Content Include="Spiders\snekmic.jpg" />
     <Content Include="Spiders\spider1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -227,6 +255,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
