@@ -1,275 +1,142 @@
 ﻿using Discord;
 using Discord.Commands;
-using Discord.Commands.Permissions.Levels;
-using Discord.Commands.Permissions.Visibility;
-using System.Collections.Generic;
+using Discord.WebSocket;
 using System;
-using Discord.API;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Timers;
 
 namespace SpoderBot
 {
-    class MyBot
+
+    public class MyBot : ModuleBase<SocketCommandContext>
     {
-        DiscordClient discord;
-        CommandService commands;
-        DateTime spamDate = DateTime.Parse("12/25/2016 12:00:01 AM");
+        //public int memecount = 0; //this stupid thing is for meme dispenser
 
-        string[] spiderPics;
-        string[] bugPics;
-        string[] snekers;
-        public MyBot()
+        string[] memes = new string[]
+            {
+                @"D:\Saved Pictures\Spiders\animalmemes\snek1.jpg",
+                @"D:\Saved Pictures\Spiders\animalmemes\drpupper.jpg",
+                @"D:\Saved Pictures\Spiders\animalmemes\ducks.jpeg",
+                @"D:\Saved Pictures\Spiders\animalmemes\footsnek.jpg",
+                @"D:\Saved Pictures\Spiders\animalmemes\forgotdog.jpg",
+                @"D:\Saved Pictures\Spiders\animalmemes\ineedthis.jpg",
+                @"D:\Saved Pictures\Spiders\animalmemes\longboy.jpg",
+                @"D:\Saved Pictures\Spiders\animalmemes\monkey1.jpg",
+                @"D:\Saved Pictures\Spiders\animalmemes\newsone.jpg",
+                @"D:\Saved Pictures\Spiders\animalmemes\sealdog.jpg",
+                @"D:\Saved Pictures\Spiders\animalmemes\snek2.jpg",
+                @"D:\Saved Pictures\Spiders\animalmemes\snekmic.jpg",
+                @"D:\Saved Pictures\Spiders\animalmemes\ventsnek.jpg",
+
+
+            };
+        
+
+
+
+        [Command("dlm")]
+        public async Task PingAsync(int numMessages)
         {
-            
-            spiderPics = new string[]
+            if(numMessages > 0 && numMessages < 31)
             {
-                "Spiders/spider11.jpg",
-                "Spiders/spider12.jpg",
-                "Spiders/spider13.jpg",
-                "Spiders/spider4.jpg",
-                "Spiders/spider5.jpg",
-                "Spiders/spider6.jpg",
-                "Spiders/spider7.jpg",
-                "Spiders/spider8.jpg",
-                "Spiders/spider9.jpg",
-                "Spiders/spider10.jpg"
+                await ReplyAsync("Sending scraped chat data for last " + numMessages + " messages, if that many messages have been sent in this channel since bot startup");
 
-            };
+                IEnumerable<IMessage> messages = await Context.Channel.GetMessagesAsync(numMessages).Flatten();
 
-            bugPics = new string[]
+                foreach (IMessage message in messages)
+                {
+                    await Context.User.SendMessageAsync(message + "");
+                    System.Threading.Thread.Sleep(100);
+                }
+            }
+            else
             {
-                "Spiders/centi2.jpg",
-                "Spiders/centi1.jpg",
-                "Spiders/centi3.jpg",
-                "Spiders/centi4.jpg",
-                "Spiders/centi5.jpg"
-                
-
-            };
-
-            snekers = new string[]
-            {
-                "Spiders/snek1.jpg",
-                "Spiders/Sneker.gif"
-
-            };
-            int count = 0;
-            int count2 = 0;
-            int loopey = 1;
-
-            discord = new DiscordClient(x =>
-            {
-                x.LogLevel = LogSeverity.Info;
-                x.LogHandler = Log;
-            });
-
-            discord.UsingCommands(x =>
-           {
-               x.PrefixChar = '!';
-               //x.AllowMentionPrefix = true;
-           });
-
-            commands = discord.GetService<CommandService>();
-
-            commands.CreateCommand("commands")
-                .Do(async (e) =>
-                {
-                    await e.Channel.SendMessage("!spiderUp - post spider\n!bugOut - post bug\n!superSecretSnek - snek mem\n!fancyspam - spams fancily\n!georgebush\n!sadface - sad snek\n!uptime - bit uptime\n!poke. Follow this command with the user you would like to poke.\n!struct - sing the song of my people");
-                    
-                });
-
-            commands.CreateCommand("uptime")
-                    .Description("Shows how long is bot running for.")
-                    .Do(async e => {
-                        var time = (DateTime.Now - Process.GetCurrentProcess().StartTime);
-                        string str = "I've been online for " + time.Days + " days, " + time.Hours + " hours, and " + time.Minutes + " minutes.";
-                        await e.Channel.SendMessage(str);
-                    });
-
-            /*commands.CreateCommand("kick")
-                .Do(async (e) =>
-                {
-                    var user = await _client.FindUser(e, e.Args[0], e.Args[1]); //args[0]would be the username, args[1] would be the discriminator (the random number that follows the discord id)
-                    if (user == null) return;
-                    await user.Kick();
-                });*/
-
-            /*commands.CreateCommand("bugOut")
-                .Do(async (e) =>
-                {
-                    string bugToPost = bugPics[count2];
-                    //await e.Channel.SendMessage("<@255854515046187019>");
-                    await e.Channel.SendFile(bugToPost);
-                    if (count2 >= 4)
-                    {
-                        count2 = 0;
-                    }
-                    else { count2++; }
-                });*/
-            commands.CreateCommand("christmas")
-                .Do(async (e) =>
-                {
-
-                    DateTime daysLeft = DateTime.Parse("12/25/2017 12:00:01 AM");/*11/25/2017 12:00:01 AM*/
-                    DateTime startDate = DateTime.Now;
-                    /*spam prevention*/
-                    TimeSpan sp = startDate - spamDate;
-                    //await e.Channel.SendMessage("SECS: " + sp.Seconds);
-                    if(sp.Seconds > 30 || sp.Minutes > 1)
-                    {
-                        //Calculate countdown timer.
-                        TimeSpan t = daysLeft - startDate;
-                        string countDown = string.Format("{0} Days, {1} Hours, {2} Minutes, {3} Seconds til launch.", t.Days, t.Hours, t.Minutes, t.Seconds);
-                        await e.Channel.SendMessage("The current exact time is: " + startDate + " \nThere's only " + t.Days + " Days, " + t.Hours + " Hours, " + t.Minutes + " Minutes, " + t.Seconds + " Seconds til Christmas!");
-                        await e.Channel.SendMessage("Thanks for the idea Jonas!");
-                        spamDate = DateTime.Now;
-                    }
-
-
-                    
-
-                    
-                    //Thread.Sleep(10000);
-                });
-
-            commands.CreateCommand("poke")
-             .Parameter("target", ParameterType.Required)
-             .Do(async (e) =>
-             {
-                 ulong id;
-                 User u = null;
-                 string findUser = e.Args[0];
-
-                 if (!string.IsNullOrWhiteSpace(findUser))
-                 {
-                     if (e.Message.MentionedUsers.Count() == 1)
-                         u = e.Message.MentionedUsers.FirstOrDefault();
-                     else if (e.Server.FindUsers(findUser).Any())
-                         u = e.Server.FindUsers(findUser).FirstOrDefault();
-                     else if (ulong.TryParse(findUser, out id))
-                         u = e.Server.GetUser(id);
-                 }
-                 Console.WriteLine("[" + e.Server.Name + "]" + e.User.Name + " just poked " + u);
-                 await u.SendMessage("Hey, you just got poked by " + e.User.Name);
-             });
-
-            commands.CreateCommand("superSecretSnek")
-                .Do(async (e) =>
-                {
-                    string snekToPost = snekers[0];
-                    //await e.Channel.SendMessage("<@255854515046187019>");
-                    await e.Channel.SendFile(snekToPost);
-                    
-                });
-
-            
-            /*commands.CreateCommand("kick")
-                    .Description("Kicks a user from this server.")
-                    .Parameter("user")
-                    .Parameter("discriminator", ParameterType.Optional)
-                    .MinPermissions((int)PermissionLevel.ServerModerator)
-                    .Do(async e =>
-                    {
-                        var user = await _client.FindUser(e, e.Args[0], e.Args[1]);
-                        if (user == null) return;
-
-                        await user.Kick();
-                        await _client.Reply(e, $"Kicked user {user.Name}.");
-                    });*/
-
-            /*commands.CreateCommand("lucas")
-                .Do(async (e) =>
-                {
-                    await e.Channel.SendMessage("<@182960069669814272>\n");
-                    await e.Channel.SendMessage("<@182960069669814272>\n");
-                    await e.Channel.SendMessage("<@182960069669814272>\n");
-                    await e.Channel.SendMessage("<@182960069669814272>\n");
-                    await e.Channel.SendMessage("<@182960069669814272>\n");
-                   
-                })*/
-
-            /*commands.CreateCommand("rolo")
-                .Do(async (e) =>
-                {
-                    
-                    await e.Channel.SendMessage("<@203219356186837002>\n<@203219356186837002>\n<@203219356186837002>\n<@203219356186837002>\n");
-                    await e.Channel.SendMessage("<@203219356186837002>\n<@203219356186837002>\n<@203219356186837002>\n<@203219356186837002>\n");
-                    await e.Channel.SendMessage("<@203219356186837002>\n<@203219356186837002>\n<@203219356186837002>\n<@203219356186837002>\n");
-                
-                });*/
-
-
-            commands.CreateCommand("struct")
-                .Do(async (e) =>
-                {
-                    if (loopey == 1)
-                    {
-                        await e.Channel.SendMessage("you take the struct\n");
-                        //Thread.Sleep(1000);
-                        loopey++;
-                    }
-                    else if (loopey == 2)
-                    {
-                        await e.Channel.SendMessage("you fill the struct\n");
-                        //Thread.Sleep(1000);
-                        loopey++;
-                    }
-                    else if (loopey == 3)
-                    {
-                        await e.Channel.SendMessage("you write the struct\n");
-                        //Thread.Sleep(1000);
-                        loopey++;
-                    }
-                    else if (loopey <= 4)
-                    {
-                        await e.Channel.SendMessage("you empty the struct\n");
-                        /*Thread.Sleep(2000);*/
-                        loopey = 1;
-                    }
-
-                       
-                });
-
-            commands.CreateCommand("spoop")
-                .Do(async (e) =>
-                {
-                    await e.Channel.SendMessage("<@255854515046187019>");
-                    //Message[] messagesToObtain;
-
-                    //messagesToObtain = await e.Channel.DownloadMessages(25);
-
-                });
-
-            commands.CreateCommand("sadface")
-                .Do(async (e) =>
-                {
-                    await e.Channel.SendFile("Spiders/sadsnek.png");
-                });
-
-            /*commands.CreateCommand("loop")
-                .Do(async (e) =>
-                {
-                    await e.Channel.SendMessage("Oh shit waddup");
-                });*/
-
+                await ReplyAsync("Scraping only works for numbers 30 or less");
+            }
             
 
-            
-
-            discord.ExecuteAndWait(async () =>
-            {
-                await discord.Connect("MjczMTU4NTU0MDkxNzgyMTQ1.C2fjdA.7qLjDSk0fPbEo3D1Kr2EJUV9XhU", TokenType.Bot);
-            });
         }
 
-
-        private void Log(object sender, LogMessageEventArgs e)
+        [Command("poke")]
+        public async Task PokeAsync(SocketGuildUser user)
         {
-            Console.WriteLine(e.Message);
+            await user.SendMessageAsync($"Sup home skillet. You've done been poked by " + Context.User.Mention);
+            Console.WriteLine("Event!\n\t" + Context.User + " just poked " + user + " from channel '" + Context.Channel + "' in guild '" + Context.Guild + "'");
         }
+
+        [Command("uptime")]
+        public async Task UTimeAsync()
+        {
+            var time = (DateTime.Now - Process.GetCurrentProcess().StartTime);
+            string str = "I've been online for " + time.Days + " days, " + time.Hours + " hours, and " + time.Minutes + " minutes.";
+            await ReplyAsync(str);
+            Console.WriteLine("Event!\n\tUser requested uptime: " + str);
+        }
+
+        [Command("createvote")]
+        public async Task CreateVote()
+        {
+            //await Context.Channel.SendFileAsync(@"D:\Saved Pictures\Spiders\animalmemes\snek1.jpg");
+        }
+
+        [Command("badmeme")]
+        public async Task PostMeme()
+        {
+            await Context.Channel.SendFileAsync(memes[Globals.memecount]);
+            Console.WriteLine("Event!\n\tUser requested badmeme #" + Globals.memecount);
+            Globals.memecount++;
+            if(Globals.memecount >= 13)
+            {
+                Globals.memecount = 0;
+            }
+            
+        }
+
+        [Command("countdown")]
+        public async Task Countdown(float time)
+        {
+            if(time < 1200 && time > 0)
+            {
+                Timer timeout = new Timer()
+                {
+                    AutoReset = false,
+                    Enabled = true,
+                    Interval = (time * 1000)
+
+                };
+                timeout.Elapsed += (e, a) => TimeoutF(Context.Channel, Context.User);
+                timeout.Start();
+                await ReplyAsync(Context.User.Mention + " " + time + " second timer started.");
+            }
+            else
+            {
+                await ReplyAsync("Timer values are restricted to positive numbers less than 1200 seconds (20 minutes)");
+            }
+            
+            
+        }
+
+        private async void TimeoutF(ISocketMessageChannel channel, SocketUser user)
+        {
+            await ReplyAsync(user.Mention + " Timer is up!");
+        }
+
+        [Command("commands")]
+        public async Task ShowCommands()
+        {
+            EmbedBuilder builder = new EmbedBuilder();
+
+            builder.WithTitle("SpoderBot Commands")
+                .WithDescription("**!poke** - Usage '!poke @2smexy' - DM's user, and informs them of poke\n**!uptime** - Displays current uptime of SpoderBot\n**!countdown** - Usage '!countdown 120' - Starts timer for user defined number of seconds\n**!badmeme** - posts a terrible animal meme\n\nBy <@225428808130363392>. Pm for info/comments")
+                .WithColor(Color.Orange);
+
+            await ReplyAsync("", false, builder.Build());
+        }
+    }
+    public class Globals
+    {
+        public static int memecount = 0;
     }
 }
