@@ -9,6 +9,7 @@ Description:
   
   Updates include console logging on most events (command triggers, user pm's to bot)
   Latest update also allows optional archiving of all messages visible to bot on all servers the bot is in.
+  Bot may require low tier administrator privileges to function properly. Not sure why right now.
   
   Commands, prefix '!': 
   !commands [list of commands] 
