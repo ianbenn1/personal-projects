@@ -31,7 +31,7 @@ namespace SpoderBot
                 .AddSingleton(_commands)
                 .BuildServiceProvider();
 
-            string botToken = "MjczMTU4NTU0MDkxNzgyMTQ1.C2fjdA.7qLjDSk0fPbEo3D1Kr2EJUV9XhU";
+            string botToken = "Add-token-to-use";
 
             Console.WriteLine("Welcome to SpoderBot!");
 
